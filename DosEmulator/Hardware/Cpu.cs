@@ -190,7 +190,7 @@ namespace DosEmulator.Hardware
         /// <summary>
         /// Sign Flag
         /// </summary>
-        public bool S
+        public bool Sf
         {
             get => (flag & 128) != 0;
             set
@@ -201,7 +201,7 @@ namespace DosEmulator.Hardware
         /// <summary>
         /// Zero Flag
         /// </summary>
-        public bool Z
+        public bool Zf
         {
             get => (flag & 64) != 0;
             set
@@ -212,7 +212,7 @@ namespace DosEmulator.Hardware
         /// <summary>
         /// Auxiliary Carry Flag
         /// </summary>
-        public bool Ac
+        public bool Acf
         {
             get => (flag & 16) != 0;
             set
@@ -223,7 +223,7 @@ namespace DosEmulator.Hardware
         /// <summary>
         /// Parity Flag
         /// </summary>
-        public bool P
+        public bool Pf
         {
             get => (flag & 4) != 0;
             set
@@ -234,7 +234,7 @@ namespace DosEmulator.Hardware
         /// <summary>
         /// Carry Flag 
         /// </summary>
-        public bool Cy
+        public bool Cf
         {
             get => (flag & 1) != 0;
             set
@@ -245,7 +245,7 @@ namespace DosEmulator.Hardware
         /// <summary>
         /// Overflow Flag
         /// </summary>
-        public bool O
+        public bool Of
         {
             get => (flag & 2048) != 0;
             set
@@ -256,7 +256,7 @@ namespace DosEmulator.Hardware
         /// <summary>
         /// Directional Flag 
         /// </summary>
-        public bool D
+        public bool Df
         {
             get => (flag & 1024) != 0;
             set
@@ -267,7 +267,7 @@ namespace DosEmulator.Hardware
         /// <summary>
         /// Interrupt Flag
         /// </summary>
-        public bool I
+        public bool If
         {
             get => (flag & 512) != 0;
             set
@@ -278,7 +278,7 @@ namespace DosEmulator.Hardware
         /// <summary>
         /// Trap Flag
         /// </summary>
-        public bool T
+        public bool Tf
         {
             get => (flag & 256) != 0;
             set
