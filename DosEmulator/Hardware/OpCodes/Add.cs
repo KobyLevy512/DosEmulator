@@ -150,7 +150,7 @@ namespace DosEmulator.Hardware.OpCodes
                 regValue = cpu.GetRegisterByte(reg);
                 cpu.Zf = regValue == 0;
                 cpu.Sf = (regValue & last_db) != 0;
-                cpu.Of = ((regValue & last_db) == (value & last_db)) && ((regValue & last_db) != ((regValue + value) & last_db));
+                cpu.Of = ((regValue & last_db) == (value & last_db)) && ((regValue & last_db) != (result & last_db));
             });
             map.Add(129, (memory, cpu, reader) =>
             {
@@ -219,7 +219,7 @@ namespace DosEmulator.Hardware.OpCodes
                 regValue = cpu.GetRegisterByte(reg);
                 cpu.Zf = regValue == 0;
                 cpu.Sf = (regValue & last_dw) != 0;
-                cpu.Of = ((regValue & last_dw) == (value & last_dw)) && ((regValue & last_dw) != ((regValue + value) & last_dw));
+                cpu.Of = ((regValue & last_dw) == (value & last_dw)) && ((regValue & last_dw) != (result & last_dw));
             });
             map.Add(131, (memory, cpu, reader) =>
             {
@@ -288,7 +288,7 @@ namespace DosEmulator.Hardware.OpCodes
                 regValue = cpu.GetRegisterByte(reg);
                 cpu.Zf = regValue == 0;
                 cpu.Sf = (regValue & last_dw) != 0;
-                cpu.Of = ((regValue & last_dw) == (value & last_dw)) && ((regValue & last_dw) != ((regValue + value) & last_dw));
+                cpu.Of = ((regValue & last_dw) == (value & last_dw)) && ((regValue & last_dw) != (result & last_dw));
             });
             //-----------------------------------------
         }
