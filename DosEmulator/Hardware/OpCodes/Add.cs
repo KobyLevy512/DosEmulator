@@ -1,25 +1,12 @@
 ﻿
-namespace DosEmulator.Hardware
+
+
+namespace DosEmulator.Hardware.OpCodes
 {
-    public delegate void MakeOpcode(Memory memory, Cpu cpu, BinaryReader reader);
-    public class Opcodes
+    public class Add : Opcode
     {
-        const int last_db = 128;
-        const int last_dw = 32768;
-        //reference to the pc memory
-        Memory memory;
-        //reference to the pc cpu
-        Cpu cpu;
-        //reference to the reader
-        BinaryReader reader;
-        //map opcodes to c# function
-        Dictionary<byte, MakeOpcode> map = new Dictionary<byte, MakeOpcode>();
-
-        public Opcodes(Memory memory, Cpu cpu)
+        public override void MapTo(Dictionary<byte, MakeOpcode> map)
         {
-            this.memory = memory;
-            this.cpu = cpu;
-
             //-----------------------------------------
             //                 ADD
             map.Add(0, (memory, cpu, reader) =>
@@ -63,7 +50,7 @@ namespace DosEmulator.Hardware
             map.Add(2, (memory, cpu, reader) =>
             {
                 map[0].Invoke(memory, cpu, reader);
-            }); 
+            });
             map.Add(3, (memory, cpu, reader) =>
             {
                 map[1].Invoke(memory, cpu, reader);
@@ -105,7 +92,7 @@ namespace DosEmulator.Hardware
 
                 //Check which instruction is it
                 byte ins = (byte)(reg & 56);
-                switch(ins)
+                switch (ins)
                 {
                     //Its add
                     case 0:
@@ -138,11 +125,11 @@ namespace DosEmulator.Hardware
                     //Its cmp
                     case 7:
                         short res = (short)(value - regValue);
-                        if(res == 0)
+                        if (res == 0)
                         {
                             cpu.Zf = true;
                         }
-                        else if(res < 0)
+                        else if (res < 0)
                         {
                             cpu.Sf = true;
                         }
@@ -302,48 +289,6 @@ namespace DosEmulator.Hardware
                 cpu.Zf = regValue == 0;
                 cpu.Sf = (regValue & last_dw) != 0;
                 cpu.Of = ((regValue & last_dw) == (value & last_dw)) && ((regValue & last_dw) != ((regValue + value) & last_dw));
-            });
-            //-----------------------------------------
-
-
-            //-----------------------------------------
-            //                 ADC
-            map.Add(16, (memory, cpu, reader) =>
-            {
-                byte value = reader.ReadByte();
-
-                //Update the carry flag
-                byte r = cpu.GetRegisterByte(value);
-                byte l = cpu.GetRegisterByte((byte)(value >> 3));
-                cpu.Cf = (r + l + (cpu.Cf ? 1 : 0)) > byte.MaxValue;
-
-                //Set the value
-                cpu.SetRegister(value, (byte)(l + r));
-
-                //Update others flags
-                r = cpu.GetRegisterByte(value);
-                cpu.Zf = r == 0;
-                cpu.Sf = (r & last_db) != 0;
-                cpu.Of = ((r & last_db) == (l & last_db)) && ((r & last_db) != ((r + l) & last_db));
-
-            });
-            map.Add(17, (memory, cpu, reader) =>
-            {
-                byte value = reader.ReadByte();
-
-                //Update the carry flag
-                ushort r = cpu.GetRegister(value);
-                ushort l = cpu.GetRegister((byte)(value >> 3));
-                cpu.Cf = (l + r + (cpu.Cf ? 1 : 0)) > ushort.MaxValue;
-
-                //Set the value
-                cpu.SetRegister(value, (ushort)(l + r));
-
-                //Update others flags
-                r = cpu.GetRegister(value);
-                cpu.Zf = r == 0;
-                cpu.Sf = (r & last_dw) != 0;
-                cpu.Of = ((r & last_dw) == (l & last_dw)) && ((r & last_dw) != ((r + l) & last_dw));
             });
             //-----------------------------------------
         }
