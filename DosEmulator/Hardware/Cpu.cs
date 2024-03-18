@@ -287,5 +287,160 @@ namespace DosEmulator.Hardware
             }
         }
         #endregion
+
+        /// <summary>
+        /// Set register value by his address.
+        /// </summary>
+        /// <param name="adr"></param>
+        /// <param name="value"></param>
+        public void SetRegister(byte adr, byte value)
+        {
+            byte val = (byte)(adr & 7);
+            switch(val)
+            {
+                case 0:
+                    Al = value; 
+                    break;
+                case 1:
+                    Cl = value;
+                    break;
+                case 2:
+                    Dl = value;
+                    break;
+                case 3:
+                    Bl = value;
+                    break;
+                case 4:
+                    Ah = value;
+                    break;
+                case 5:
+                    Ch = value;
+                    break;
+                case 6:
+                    Dh = value;
+                    break;
+                case 7:
+                    Bh = value;
+                    break;
+            }
+        }
+        /// <summary>
+        /// Set register value by his address.
+        /// </summary>
+        /// <param name="adr"></param>
+        /// <param name="value"></param>
+        public void SetRegister(byte adr, ushort value)
+        {
+            byte val = (byte)(adr & 7);
+            switch (val)
+            {
+                case 0:
+                    Ax = value;
+                    break;
+                case 1:
+                    Cx = value;
+                    break;
+                case 2:
+                    Dx = value;
+                    break;
+                case 3:
+                    Bx = value;
+                    break;
+                case 4:
+                    Sp = value;
+                    break;
+                case 5:
+                    Bp = value;
+                    break;
+                case 6:
+                    Si = value;
+                    break;
+                case 7:
+                    Di = value;
+                    break;
+            }
+        }
+        /// <summary>
+        /// Set segment value by his address.
+        /// </summary>
+        /// <param name="adr"></param>
+        /// <param name="value"></param>
+        public void SetSegment(byte adr, ushort value)
+        {
+            byte val = (byte)(adr & 3);
+            switch (val)
+            {
+                case 0:
+                    Es = value;
+                    break;
+                case 1:
+                    Cs = value;
+                    break;
+                case 2:
+                    Ss = value;
+                    break;
+                case 3:
+                    Ds = value;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Get register byte value by his address.
+        /// </summary>
+        /// <param name="adr"></param>
+        /// <param name="value"></param>
+        public byte GetRegisterByte(byte adr)
+        {
+            byte val = (byte)(adr & 7);
+            switch (val)
+            {
+                case 0:
+                    return Al;
+                case 1:
+                    return Cl;
+                case 2:
+                    return Dl;
+                case 3:
+                    return Bl;
+                case 4:
+                    return Ah;
+                case 5:
+                    return Ch;
+                case 6:
+                    return Dh;
+                default:
+                    return Bh;
+            }
+        }
+
+        /// <summary>
+        /// Get register ushort value by his address.
+        /// </summary>
+        /// <param name="adr"></param>
+        /// <param name="value"></param>
+        public ushort GetRegister(byte adr)
+        {
+            byte val = (byte)(adr & 7);
+            switch (val)
+            {
+                case 0:
+                    return Ax;
+                case 1:
+                    return Cx;
+                case 2:
+                    return Dx;
+                case 3:
+                    return Bx;
+                case 4:
+                    return Sp;
+                case 5:
+                    return Bp;
+                case 6:
+                    return Si;
+                default:
+                    return Di;
+            }
+        }
     }
 }
