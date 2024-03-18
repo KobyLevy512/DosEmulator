@@ -38,8 +38,7 @@ namespace DosEmulator.Hardware
                 r = cpu.GetRegisterByte(value);
                 cpu.Zf = r == 0;
                 cpu.Sf = (r & last_db) != 0;
-                cpu.Of = r > sbyte.MaxValue;
-
+                cpu.Of = ((r & last_db) == (l & last_db)) && ((r & last_db) != ((r + l) & last_db));
 
             });
             map.Add(1, (memory, cpu, reader) =>
@@ -58,7 +57,7 @@ namespace DosEmulator.Hardware
                 r = cpu.GetRegister(value);
                 cpu.Zf = r == 0;
                 cpu.Sf = (r & last_dw) != 0;
-                cpu.Of = r > short.MaxValue;
+                cpu.Of = ((r & last_dw) == (l & last_dw)) && ((r & last_dw) != ((r + l) & last_dw));
 
             });
             map.Add(2, (memory, cpu, reader) =>
@@ -81,7 +80,7 @@ namespace DosEmulator.Hardware
                 //Update others flags
                 cpu.Zf = cpu.Al == 0;
                 cpu.Sf = (cpu.Al & last_db) != 0;
-                cpu.Of = cpu.Al > sbyte.MaxValue;
+                cpu.Of = ((cpu.Al & last_db) == (add & last_db)) && ((cpu.Al & last_db) != ((cpu.Al + add) & last_db));
             });
             map.Add(5, (memory, cpu, reader) =>
             {
@@ -95,7 +94,7 @@ namespace DosEmulator.Hardware
                 //Update others flags
                 cpu.Zf = cpu.Ax == 0;
                 cpu.Sf = (cpu.Ax & last_dw) != 0;
-                cpu.Of = cpu.Ax > short.MaxValue;
+                cpu.Of = ((cpu.Ax & last_dw) == (add & last_dw)) && ((cpu.Ax & last_dw) != ((cpu.Ax + add) & last_dw));
             });
             map.Add(128, (memory, cpu, reader) =>
             {
@@ -164,7 +163,7 @@ namespace DosEmulator.Hardware
                 regValue = cpu.GetRegisterByte(reg);
                 cpu.Zf = regValue == 0;
                 cpu.Sf = (regValue & last_db) != 0;
-                cpu.Of = regValue > sbyte.MaxValue;
+                cpu.Of = ((regValue & last_db) == (value & last_db)) && ((regValue & last_db) != ((regValue + value) & last_db));
             });
             map.Add(129, (memory, cpu, reader) =>
             {
@@ -233,7 +232,7 @@ namespace DosEmulator.Hardware
                 regValue = cpu.GetRegisterByte(reg);
                 cpu.Zf = regValue == 0;
                 cpu.Sf = (regValue & last_dw) != 0;
-                cpu.Of = regValue > short.MaxValue;
+                cpu.Of = ((regValue & last_dw) == (value & last_dw)) && ((regValue & last_dw) != ((regValue + value) & last_dw));
             });
             map.Add(131, (memory, cpu, reader) =>
             {
@@ -302,13 +301,51 @@ namespace DosEmulator.Hardware
                 regValue = cpu.GetRegisterByte(reg);
                 cpu.Zf = regValue == 0;
                 cpu.Sf = (regValue & last_dw) != 0;
-                cpu.Of = regValue > short.MaxValue;
+                cpu.Of = ((regValue & last_dw) == (value & last_dw)) && ((regValue & last_dw) != ((regValue + value) & last_dw));
             });
             //-----------------------------------------
 
 
             //-----------------------------------------
-            //                 ADD
+            //                 ADC
+            map.Add(16, (memory, cpu, reader) =>
+            {
+                byte value = reader.ReadByte();
+
+                //Update the carry flag
+                byte r = cpu.GetRegisterByte(value);
+                byte l = cpu.GetRegisterByte((byte)(value >> 3));
+                cpu.Cf = (r + l + (cpu.Cf ? 1 : 0)) > byte.MaxValue;
+
+                //Set the value
+                cpu.SetRegister(value, (byte)(l + r));
+
+                //Update others flags
+                r = cpu.GetRegisterByte(value);
+                cpu.Zf = r == 0;
+                cpu.Sf = (r & last_db) != 0;
+                cpu.Of = ((r & last_db) == (l & last_db)) && ((r & last_db) != ((r + l) & last_db));
+
+            });
+            map.Add(17, (memory, cpu, reader) =>
+            {
+                byte value = reader.ReadByte();
+
+                //Update the carry flag
+                ushort r = cpu.GetRegister(value);
+                ushort l = cpu.GetRegister((byte)(value >> 3));
+                cpu.Cf = (l + r + (cpu.Cf ? 1 : 0)) > ushort.MaxValue;
+
+                //Set the value
+                cpu.SetRegister(value, (ushort)(l + r));
+
+                //Update others flags
+                r = cpu.GetRegister(value);
+                cpu.Zf = r == 0;
+                cpu.Sf = (r & last_dw) != 0;
+                cpu.Of = ((r & last_dw) == (l & last_dw)) && ((r & last_dw) != ((r + l) & last_dw));
+            });
+            //-----------------------------------------
         }
     }
 }
