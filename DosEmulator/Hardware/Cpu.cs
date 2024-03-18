@@ -10,6 +10,7 @@ namespace DosEmulator.Hardware
         //Special registers
         ushort ip, flag;
 
+        #region GeneralPurposeRegisters
         /// <summary>
         ///ax (Accumulator) : Most arithmetic and logical computations use this register
         /// </summary>
@@ -107,5 +108,184 @@ namespace DosEmulator.Hardware
             get => (byte)(dx & 0xFF00);
             set => dx = (ushort)((dx & 0x00FF) | value);
         }
+        /// <summary>
+        /// si (Source Index) : Used as a pointer to access memory indirectly
+        /// </summary>
+        public ushort Si
+        {
+            get => si;
+            set => si = value;
+        }
+        /// <summary>
+        /// di (Dest. Index) : Like the si register, this is also used for indirectly accessing the memory
+        /// </summary>
+        public ushort Di
+        {
+            get => di;
+            set => di = value;
+        }
+        /// <summary>
+        /// bp (Base Pointer) : Like the bx register, this is also used to store base addresses. Generally, this register is used to access local variables in a procedure.
+        /// </summary>
+        public ushort Bp
+        {
+            get => bp;
+            set => bp = value;
+        }
+        /// <summary>
+        /// sp (Stack Pointer) : A very important register. Maintains the program stack, and so should be used carefully.
+        /// </summary>
+        public ushort Sp
+        {
+            get => sp;
+            set => sp = value;
+        }
+        #endregion
+
+        #region SegmentsRegisters
+        /// <summary>
+        /// The cs (Code Segment) register points at the segment containing the currently executing machine instructions. Since you can change the value of the cs register, you can switch to a new code segment when you want to execute the code located there. 
+        /// </summary>
+        public ushort Cs
+        {
+            get => cs;
+            set => cs = value;
+        }
+        /// <summary>
+        /// The ds (Data Segment) register generally points at global variables for the program. You can change the value of the ds register to access additional data in other segments. 
+        /// </summary>
+        public ushort Ds
+        {
+            get => ds;
+            set => ds = value;
+        }
+        /// <summary>
+        /// The es (Extra Segment) register is an extra segment register. 8086 programs often use this segment register to gain access to segments when it is difficult or impossible to modify the other segment registers. 
+        /// </summary>
+        public ushort Es
+        {
+            get => es;
+            set => es = value;
+        }
+        /// <summary>
+        /// The ss (Stack Segment) register points at the segment containing the 8086 stack. The stack is where the 8086 stores important machine state information, subroutine return addresses, procedure parameters, and local variables. In general, you do not modify the stack segment register because too many things in the system depend upon it. 
+        /// </summary>
+        public ushort Ss
+        {
+            get => ss;
+            set => ss = value;
+        }
+        #endregion
+
+        #region SpecialRegisters
+        /// <summary>
+        /// The ip is sometimes referred to as the pc (program counter). These registers cannot be accessed directly in real mode, they are modified by the cpu during execution.
+        /// </summary>
+        public ushort Ip
+        {
+            get => ip;
+            set => ip = value;
+        }
+
+        /// <summary>
+        /// Sign Flag
+        /// </summary>
+        public bool S
+        {
+            get => (flag & 128) != 0;
+            set
+            {
+                flag |= value ? (ushort)128 : (ushort)0;
+            }
+        }
+        /// <summary>
+        /// Zero Flag
+        /// </summary>
+        public bool Z
+        {
+            get => (flag & 64) != 0;
+            set
+            {
+                flag |= value ? (ushort)64 : (ushort)0;
+            }
+        }
+        /// <summary>
+        /// Auxiliary Carry Flag
+        /// </summary>
+        public bool Ac
+        {
+            get => (flag & 16) != 0;
+            set
+            {
+                flag |= value ? (ushort)16 : (ushort)0;
+            }
+        }
+        /// <summary>
+        /// Parity Flag
+        /// </summary>
+        public bool P
+        {
+            get => (flag & 4) != 0;
+            set
+            {
+                flag |= value ? (ushort)4 : (ushort)0;
+            }
+        }
+        /// <summary>
+        /// Carry Flag 
+        /// </summary>
+        public bool Cy
+        {
+            get => (flag & 1) != 0;
+            set
+            {
+                flag |= value ? (ushort)1 : (ushort)0;
+            }
+        }
+        /// <summary>
+        /// Overflow Flag
+        /// </summary>
+        public bool O
+        {
+            get => (flag & 2048) != 0;
+            set
+            {
+                flag |= value ? (ushort)2048 : (ushort)0;
+            }
+        }
+        /// <summary>
+        /// Directional Flag 
+        /// </summary>
+        public bool D
+        {
+            get => (flag & 1024) != 0;
+            set
+            {
+                flag |= value ? (ushort)1024 : (ushort)0;
+            }
+        }
+        /// <summary>
+        /// Interrupt Flag
+        /// </summary>
+        public bool I
+        {
+            get => (flag & 512) != 0;
+            set
+            {
+                flag |= value ? (ushort)512 : (ushort)0;
+            }
+        }
+        /// <summary>
+        /// Trap Flag
+        /// </summary>
+        public bool T
+        {
+            get => (flag & 256) != 0;
+            set
+            {
+                flag |= value ? (ushort)256 : (ushort)0;
+            }
+        }
+        #endregion
     }
 }
