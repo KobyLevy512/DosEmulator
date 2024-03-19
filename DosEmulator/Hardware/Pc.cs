@@ -1,4 +1,6 @@
 ﻿
+using System.Reflection;
+
 namespace DosEmulator.Hardware
 {
     public delegate void MakeOpcode(Memory memory, Cpu cpu, BinaryReader reader);
@@ -20,11 +22,24 @@ namespace DosEmulator.Hardware
             this.memory = memory;
             this.cpu = cpu;
 
-            new OpCodes.Add().MapTo(map);
-            new OpCodes.Adc().MapTo(map);
-            //-----------------------------------------
-            //                 AND
+            // Get all subtypes of opcode
+            List<Type> subclasses = Assembly
+                .GetExecutingAssembly()
+                .GetTypes()
+                .Where(type => type.IsSubclassOf(typeof(OpCodes.Opcode)))
+                .ToList();
 
+            // Print the names of the subclasses
+            foreach (var subclass in subclasses)
+            {
+                ((OpCodes.Opcode)subclass?.GetConstructor(null)?.Invoke(null)).MapTo(map);
+            }
+            //new OpCodes.Add().MapTo(map);
+            //new OpCodes.Adc().MapTo(map);
+            //new OpCodes.And().MapTo(map);
+            //new OpCodes.Call().MapTo(map);
+            //map.Add(252, (memory, cpu, reader) => cpu.Df = false);//Direction flag reset
+            //new OpCodes.Cmp().MapTo(map);
         }
     }
 }
