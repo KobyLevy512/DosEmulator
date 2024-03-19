@@ -27,7 +27,7 @@ namespace DosEmulator.Hardware
             List<Type> opcodes = Assembly
                 .GetExecutingAssembly()
                 .GetTypes()
-                .Where(type => type.IsSubclassOf(typeof(OpCodes.Opcode)))
+                .Where(type => type.IsSubclassOf(typeof(Opcode)))
                 .ToList();
 
             // Map each opcode to the map object.
