@@ -1,4 +1,5 @@
 ﻿
+using DosEmulator.Hardware.OpCodes;
 using System.Reflection;
 
 namespace DosEmulator.Hardware
@@ -23,23 +24,21 @@ namespace DosEmulator.Hardware
             this.cpu = cpu;
 
             // Get all subtypes of opcode
-            List<Type> subclasses = Assembly
+            List<Type> opcodes = Assembly
                 .GetExecutingAssembly()
                 .GetTypes()
                 .Where(type => type.IsSubclassOf(typeof(OpCodes.Opcode)))
                 .ToList();
 
-            // Print the names of the subclasses
-            foreach (var subclass in subclasses)
+            // Map each opcode to the map object.
+            foreach (Type? opcode in opcodes)
             {
-                ((OpCodes.Opcode)subclass?.GetConstructor(null)?.Invoke(null)).MapTo(map);
+                //Get an instance of this opcode.
+                Opcode? ins =  (Opcode?)opcode?.GetConstructor(Type.EmptyTypes)?.Invoke(null);
+                
+                //Map it to the map object.
+                ins?.MapTo(map);
             }
-            //new OpCodes.Add().MapTo(map);
-            //new OpCodes.Adc().MapTo(map);
-            //new OpCodes.And().MapTo(map);
-            //new OpCodes.Call().MapTo(map);
-            //map.Add(252, (memory, cpu, reader) => cpu.Df = false);//Direction flag reset
-            //new OpCodes.Cmp().MapTo(map);
         }
     }
 }
